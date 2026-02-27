@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивный тест: Формулы половинного угла</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: linear-gradient(145deg, #f5f9ff 0%, #e6ecf5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .test-card {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 48px;
+            box-shadow: 0 25px 45px -12px rgba(0, 20, 40, 0.35);
+            padding: 30px 35px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0a2a44;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        h1 span {
+            background: #1e3c72;
+            color: white;
+            font-size: 1rem;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+        .timer-notice {
+            background: #fce7b2;
+            color: #5d3f00;
+            padding: 12px 20px;
+            border-radius: 40px;
+            margin: 20px 0 25px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            border: 1px dashed #b57c00;
+        }
+        .timer-notice::before {
+            content: "⏳";
+            font-size: 1.4rem;
+        }
+        .instruction {
+            background: #eef3fa;
+            padding: 14px 20px;
+            border-radius: 28px;
+            margin-bottom: 30px;
+            color: #1e3c72;
+            font-weight: 500;
+            border-left: 6px solid #2b5797;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+        .question-item {
+            background: white;
+            border-radius: 30px;
+            padding: 18px 25px;
+            box-shadow: 0 6px 14px rgba(0, 10, 30, 0.08);
+            transition: all 0.15s;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .question-item:hover {
+            border-color: #a0c1e3;
+            box-shadow: 0 8px 18px rgba(30, 60, 114, 0.12);
+        }
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 550;
+            color: #0b2c4b;
+            margin-bottom: 16px;
+            line-height: 1.5;
+            padding-right: 10px;
+        }
+        .options {
+            display: flex;
+            gap: 35px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 1.05rem;
+        }
+        .option input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #9bb6d0;
+            border-radius: 50%;
+            outline: none;
+            transition: 0.1s;
+            cursor: pointer;
+            position: relative;
+        }
+        .option input[type="radio"]:checked {
+            border-color: #1e5ca3;
+            background-color: #1e5ca3;
+            box-shadow: inset 0 0 0 5px white;
+        }
+        .option input[type="radio"]:checked + span {
+            font-weight: 600;
+            color: #1e5ca3;
+        }
+        .option span {
+            color: #1f3a5f;
+        }
+        .correct-badge {
+            display: inline-block;
+            margin-left: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
+        .correct-badge.true {
+            background: #c8f0d2;
+            color: #0f6228;
+        }
+        .correct-badge.false {
+            background: #ffe0db;
+            color: #b13e2d;
+        }
+        .button-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .btn {
+            background: white;
+            border: none;
+            padding: 16px 36px;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0, 32, 64, 0.2);
+            transition: all 0.15s;
+            border: 1px solid rgba(255,255,255,0.5);
+            flex: 1 1 auto;
+            min-width: 200px;
+            letter-spacing: 0.3px;
+        }
+        .btn-check {
+            background: #1e3c72;
+            color: white;
+        }
+        .btn-check:hover {
+            background: #143058;
+            transform: scale(1.02);
+            box-shadow: 0 12px 24px rgba(20, 50, 100, 0.4);
+        }
+        .btn-reset {
+            background: #f0f4fa;
+            color: #1e3c72;
+        }
+        .btn-reset:hover {
+            background: #dde5f0;
+        }
+        .result-area {
+            margin-top: 30px;
+            padding: 20px 25px;
+            background: #dceafa;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #0a2a44;
+            border: 2px solid white;
+        }
+        .result-score {
+            font-size: 2rem;
+            background: #0a2a44;
+            color: white;
+            padding: 8px 25px;
+            border-radius: 60px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        .footnote {
+            margin-top: 15px;
+            color: #486a8b;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        hr {
+            border: 1px solid rgba(100,130,170,0.2);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-card">
+        <h1>
+            📐 Тригонометрия: половинный угол
+            <span>9 класс</span>
+        </h1>
+
+        <div class="timer-notice">
+            Рассчитан на 5 минут · 7 вопросов
+        </div>
+
+        <div class="instruction">
+            ⚡ Для каждого утверждения выберите «Верно» или «Неверно». После завершения нажмите «Проверить ответы».
+        </div>
+
+        <!-- Контейнер с вопросами -->
+        <div class="question-list" id="questionList">
+            <!-- Вопрос 1 -->
+            <div class="question-item" id="q1">
+                <div class="question-text">1. Формула синуса половинного угла: \(\sin\frac{\alpha}{2} = \sqrt{\frac{1-\cos\alpha}{2}}\) (знак ± отсутствует).</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q1" value="true"> <span>Верно</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="false"> <span>Неверно</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Вопрос 2 -->
+            <div class="question-item" id="q2">
+                <div class="question-text">2. Чтобы вычислить \(\cos 15^\circ\) по формуле половинного угла, берут \(\alpha = 30^\circ\) и знак «+», так как 15° в I четверти.</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q2" value="true"> <span>Верно</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="false"> <span>Неверно</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Вопрос 3 -->
+            <div class="question-item" id="q3">
+                <div class="question-text">3. Упрощение \(\frac{1-\cos 2\alpha}{\sin 2\alpha}\) равно \(\tg \alpha\).</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q3" value="true"> <span>Верно</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="false"> <span>Неверно</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Вопрос 4 -->
+            <div class="question-item" id="q4">
+                <div class="question-text">4. Если \(\cos\alpha = -0.6\) и \(\alpha\) во II четверти, то \(\cos\frac{\alpha}{2} = \sqrt{\frac{1+(-0.6)}{2}} = \sqrt{0.2}\). Это верно (знак корня положительный, так как \(\alpha/2\) в I четверти).</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q4" value="true"> <span>Верно</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="false"> <span>Неверно</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Вопрос 5 -->
+            <div class="question-item" id="q5">
+                <div class="question-text">5. Формулы \(\tg\frac{\alpha}{2} = \frac{1-\cos\alpha}{\sin\alpha}\) и \(\tg\frac{\alpha}{2} = \frac{\sin\alpha}{1+\cos\alpha}\) — это разные, не связанные друг с другом формулы.</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q5" value="true"> <span>Верно</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="false"> <span>Неверно</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Вопрос 6 -->
+            <div class="question-item" id="q6">
+                <div class="question-text">6. Формулу \(\sin 2\alpha = 2\sin\alpha\cos\alpha\) можно использовать для нахождения \(\sin 30^\circ\), если известны \(\sin 15^\circ\) и \(\cos 15^\circ\).</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q6" value="true"> <span>Верно</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="false"> <span>Неверно</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Вопрос 7 -->
+            <div class="question-item" id="q7">
+                <div class="question-text">7. Выражение \(\sqrt{\frac{1-\cos 4\alpha}{2}}\) равно \(|\sin 2\alpha|\).</div>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q7" value="true"> <span>Верно</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="false"> <span>Неверно</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопки управления -->
+        <div class="button-group">
+            <button class="btn btn-check" id="checkBtn">✅ Проверить ответы</button>
+            <button class="btn btn-reset" id="resetBtn">🔄 Начать заново</button>
+        </div>
+
+        <!-- Блок результата -->
+        <div class="result-area" id="resultBox">
+            <span id="resultMessage">Жду ваших ответов!</span>
+            <div class="result-score" id="scoreDisplay">—</div>
+        </div>
+        <hr>
+        <div class="footnote">
+            ⏱️ Постарайтесь уложиться в 5 минут. Проверьте себя сразу после теста.
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Правильные ответы: false = Неверно, true = Верно
+            const correctAnswers = [false, true, true, true, false, true, true];
+            const questionNames = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7'];
+
+            // Функция сбора ответов пользователя
+            function getUserAnswers() {
+                let userAnswers = [];
+                for (let i = 0; i < questionNames.length; i++) {
+                    const radios = document.getElementsByName(questionNames[i]);
+                    let selectedValue = null;
+                    for (let radio of radios) {
+                        if (radio.checked) {
+                            selectedValue = radio.value === 'true'; // true если "Верно"
+                            break;
+                        }
+                    }
+                    userAnswers.push(selectedValue); // может быть null, если не выбрано
+                }
+                return userAnswers;
+            }
+
+            // Функция подсчёта правильных
+            function calculateScore(userAnswers) {
+                let correctCount = 0;
+                for (let i = 0; i < correctAnswers.length; i++) {
+                    if (userAnswers[i] !== null && userAnswers[i] === correctAnswers[i]) {
+                        correctCount++;
+                    }
+                }
+                return correctCount;
+            }
+
+            // Функция для снятия выделения со всех вопросов (убрать бейджи/подсветку)
+            function resetVisualFeedback() {
+                for (let i = 0; i < questionNames.length; i++) {
+                    const qItem = document.getElementById(`q${i+1}`);
+                    // Убрать все дополнительные индикаторы, если были
+                    const existingBadge = qItem.querySelector('.correct-badge');
+                    if (existingBadge) existingBadge.remove();
+                    qItem.style.backgroundColor = ''; // сброс фона
+                }
+            }
+
+            // Функция отображения результатов с подсветкой
+            function showResults() {
+                const userAnswers = getUserAnswers();
+                const score = calculateScore(userAnswers);
+                const total = correctAnswers.length;
+
+                // Очистить предыдущую подсветку
+                resetVisualFeedback();
+
+                // Подсветить каждый вопрос
+                for (let i = 0; i < questionNames.length; i++) {
+                    const qItem = document.getElementById(`q${i+1}`);
+                    const userAns = userAnswers[i];
+                    const correct = correctAnswers[i];
+
+                    // Создаём маленький бейдж
+                    const badge = document.createElement('span');
+                    badge.classList.add('correct-badge');
+
+                    if (userAns === null) {
+                        // не отвечен
+                        badge.textContent = '⚠️ нет ответа';
+                        badge.style.background = '#f2e0b0';
+                        badge.style.color = '#7a5d00';
+                        qItem.style.backgroundColor = '#fff6e5';
+                    } else if (userAns === correct) {
+                        badge.textContent = '✓ правильно';
+                        badge.classList.add('true');
+                        qItem.style.backgroundColor = '#f0fff2';
+                    } else {
+                        badge.textContent = '✗ неверно';
+                        badge.classList.add('false');
+                        qItem.style.backgroundColor = '#ffeeed';
+                    }
+
+                    // Удалить старый бейдж, если есть, и добавить новый
+                    const oldBadge = qItem.querySelector('.correct-badge');
+                    if (oldBadge) oldBadge.remove();
+                    qItem.appendChild(badge);
+                }
+
+                // Отобразить общий результат
+                const resultMsg = document.getElementById('resultMessage');
+                const scoreDisplay = document.getElementById('scoreDisplay');
+                if (score === total) {
+                    resultMsg.textContent = 'Превосходно! Все ответы верны.';
+                } else if (score >= 5) {
+                    resultMsg.textContent = 'Хороший результат! Нужно подтянуть теорию.';
+                } else {
+                    resultMsg.textContent = 'Стоит повторить формулы половинного угла.';
+                }
+                scoreDisplay.textContent = `${score} из ${total}`;
+            }
+
+            // Полный сброс (очистить выбор, убрать подсветку)
+            function resetTest() {
+                // снять все радиокнопки
+                for (let i = 0; i < questionNames.length; i++) {
+                    const radios = document.getElementsByName(questionNames[i]);
+                    for (let radio of radios) {
+                        radio.checked = false;
+                    }
+                }
+                // убрать визуальные подсказки
+                resetVisualFeedback();
+                // сбросить текст результата
+                document.getElementById('resultMessage').textContent = 'Жду ваших ответов!';
+                document.getElementById('scoreDisplay').textContent = '—';
+                // убрать фон у вопросов (доп. безопасность)
+                for (let i = 0; i < questionNames.length; i++) {
+                    const qItem = document.getElementById(`q${i+1}`);
+                    qItem.style.backgroundColor = '';
+                }
+            }
+
+            // Обработчики кнопок
+            document.getElementById('checkBtn').addEventListener('click', function() {
+                showResults();
+            });
+
+            document.getElementById('resetBtn').addEventListener('click', function() {
+                resetTest();
+            });
+
+            // Дополнительно: можно добавить защиту от случайной отправки без ответов, но показывать как есть.
+            // При желании можно добавить подтверждение, но не обязательно.
+
+            // Инициализация: сброс при загрузке страницы (чистое состояние)
+            window.addEventListener('load', function() {
+                resetTest();
+            });
+        })();
+    </script>
+
+    <!-- Для красивого отображения формул добавим MathJax (не обязательно, но сделает запись приятнее) -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <!-- Настройка MathJax для инлайн формул -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']]
+            }
+        };
+    </script>
+</body>
+</html>
